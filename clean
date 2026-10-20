@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Remove LaTeX auxiliary files from this directory.
+set -euo pipefail
+
+cd "$(dirname "$0")"
+shopt -s nullglob
+
+rm -f -- *.aux *.fdb_latexmk *.fls *.out *.log *.gz
