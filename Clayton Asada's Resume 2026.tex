@@ -27,17 +27,7 @@
 %----------------------------------------------------------------------------------------
 %	FONT BASICS
 %----------------------------------------------------------------------------------------
-
-% some tex-live fonts - choose your own
-
-%\usepackage[defaultsans]{droidsans}
-%\usepackage[default]{comfortaa}
-%\usepackage{cmbright}
 \usepackage[default]{raleway}
-%\usepackage{fetamont}
-%\usepackage[default]{gillius}
-%\usepackage[light,math]{iwona}
-%\usepackage[thin]{roboto} 
 
 % set font default
 \renewcommand*\familydefault{\sfdefault}
@@ -129,12 +119,6 @@
 %for header image
 \usepackage{graphicx}
 
-% use this for floating figures
-% \usepackage{wrapfig}
-% \usepackage{float}
-% \floatstyle{boxed} 
-% \restylefloat{figure}
-
 %for drawing graphics		
 \usepackage{tikz}
 \usetikzlibrary{shapes, backgrounds,mindmap, trees}
@@ -165,7 +149,6 @@
 % to keep padding included in width calculations
 % can also be used for other boxes / environments
 \newcommand{\mpwidth}{\linewidth-\fboxsep-\fboxsep}
-
 
 
 %============================================================================%
@@ -273,7 +256,7 @@
 % param 1: time-frame i.e. Sep 14 - Jan 15 etc.
 % param 2:	 event name (job position etc.)
 % param 3: Customer, Employer, Industry
-% param 4: Short description
+% param 4: Short description (optional)
 % param 5: work done (optional)
 % param 6: technologies include (optional)
 % param 7: achievements (optional)
@@ -313,7 +296,7 @@
 }
 
 %----------------------------------------------------------------------------------------
-%	 CV EVENT
+%	 CV MINI EVENT
 %----------------------------------------------------------------------------------------
 
 % Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
@@ -323,10 +306,6 @@
 % param 1: time-frame i.e. Sep 14 - Jan 15 etc.
 % param 2:	 event name (job position etc.)
 % param 3: Customer, Employer, Industry
-% param 4: Short description
-% param 5: work done (optional)
-% param 6: technologies include (optional)
-% param 7: achievements (optional)
 \newcommand{\cvminievent}[3] {
 
 	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
@@ -391,7 +370,7 @@
 %
 %============================================================================%
 \begin{document}
-\columnratio{0.31}
+\columnratio{0.29}
 \setlength{\columnsep}{2.2em}
 \setlength{\columnseprule}{4pt}
 \colseprulecolor{lightcol}
@@ -405,58 +384,23 @@
 %---------------------------------------------------------------------------------------
 %	META SKILLS
 %----------------------------------------------------------------------------------------
-\cvleftsection{SKILLS}
+\cvleftsection{Languages} \\
+\cvother{Java 13+} {5 yrs} 
+\cvother{SQL} {5 yrs} 
+\cvother{Javascript} {9 mo} 
+\cvother{Python} {1+ yrs}  
 
-\cvother{Java 13+} {3 yrs} \\[-2pt] %{1}
+\cvleftsection{TECHNOLOGIES} \\
+\cvother{Amazon Web Services (AWS)} {5 yrs} 
+\cvother{Kubernetes} {2 yrs}  
+\cvother{Docker/Podman} {2 yrs} 
 
-\cvother{SQL} {3 yrs} \\[-2pt] %{.75}
+\cvleftsection {TOOLS} \\
+\cvother{Intellij} {3 yrs} 
+\cvother{VsCode} {2 yrs} 
+\cvother{NeoVim} {3+ yrs} 
+\cvother{Atlassian Suite} {5 yrs} 
 
-\cvother{Spring Boot} {3 yrs} \\[-2pt]
-
-\cvother{Kafka} {2 yrs} \\[-2pt]
-
-\cvother{Python} {1+ yrs}  \\[-2pt] %{.5}
-
-\cvother{Pytorch} {1 yrs} \\[-2pt]
-
-
-\begin{comment}
-\cvleftsection{TECHNOLOGIES}
-
-\cvother{Gradle} {2+ yrs}  \\[-2pt] %{1}
-
-\cvother{Kafka} {1+ yrs} \\[-2pt]
-
-\cvother{RabbitMQ} {1+ yrs} \\[-2pt]
-
-\cvother{Splunk} {1+ yrs} \\[-2pt]
-
-\cvother{Unix} {1+ yrs} \\[-2pt]
-
-\cvother{RedHat OpenShift} {1+ yrs} \\[-2pt]
-
-\end{comment}
-
-\cvleftsection {TOOLS}
-
-\cvother{Intellij} {3+ yrs} \\[-2pt]
-
-\cvother{Atlassian Suite} {2 yrs} \\[-2pt]
-
-\cvother{Pycharm} {1 yrs} \\[-2pt]
-
-\cvother{Jupyter} {1 yrs} \\[-2pt]
-
-\begin{comment}
-%\vfill\null
-\cvleftsection{CONTACT}
-
-\icontext{MapMarker}{12}{9874 11th Street\\Garden Grove CA, 92844}{black}\\[6pt]
-\icontext{MobilePhone}{12}{+1 916 801 6154}{black}\\[6pt]
-\iconemail{Envelope}{12}{casada94@gmail.com}{casada94@gmail.com}{black}\\[6pt]
-\end{comment}
-%\vfill\null
-%\cvqrcode{0.7}
 
 %---------------------------------------------------------------------------------------
 %	EDUCATION
@@ -468,16 +412,13 @@
 {08/15/2022 - 05/15/2024}
 {M.S. Computer Science}
 {C.S.U., Long Beach \hfill \textcolor{maincol}{\textbf{GPA: 4.0}}}
-{Computer Science Master's Program with thesis on AI/ML. I introduced a novel dropout out technique, 'Sector-Wise Dropout', and submitted to ICML 2024 for publication (pending review)}
-%. Final GPA: 4.0}
-
+{Computer Science Master’s Program with thesis on AI/ML.  I graduated 2nd in my class and introduced a novel dropout out technique in my thesis, ’Sector-Wise Dropout’.}
 
 \cvmetaevent
 {08/15/2015 - 05/15/2020}
 {B.S. Computer Science.}
 {C.S.U., Long Beach}
-%{}
-{General computer science education, concluding with a 1 year project. My project was a Google Maps clone strictly for the school campus, including features such as authentication, path finding, interactive map, "street views".}
+{}
 
 \vfill\null
 \cvqrcode{0.6}
@@ -513,7 +454,7 @@
 		\HUGE{ \textbf{ \textcolor{white}{ \uppercase{ Clayton Asada } } } } \\[-24pt]
 		\textcolor{white}{ \rule{0.3\textwidth}{1.25pt} } \\[8pt]
 		%\large{ \textcolor{white} {Software Engineer} } \\[4pt]
-		\large{\textcolor{white} { Garden Grove, CA ---}}
+		\large{\textcolor{white} { Plano, TX ---}}
 		\large{\textcolor{white} { (916) 801 6154 ---}}
 		\large{\textcolor{white} { Casada94@gmail.com   } }
 	\end {center}
@@ -526,10 +467,7 @@
 %\vfill\null
 \cvsection{PROFILE}
 
-%\cvtext{I recently completed my masters thesis based in AI/ML, based a novel regularization method I introduced in a research paper submitted to ICML 2024. I am currently looking for roles in this same field where I can be an asset to the team and continue to grow my expertise.
-%}
-
-\cvtext{I’m a highly motivated, self-driven software engineer with 3 years experience developing Java Spring Boot applications in the credit industry. My current role is focused on backend development of highly avaliable and secure microservices which process millions of unique events every day, deployed on AWS, RedHat OpenShift or distributed Unix Systems.}
+\cvtext{I'm a highly motivated, results-driven software engineer with a strong background in Java development and cloud technologies. I thrive in dynamic environments, consistently delivering innovative solutions that enhance system performance and drive business growth.  }
 
 %---------------------------------------------------------------------------------------
 %	WORK EXPERIENCE
@@ -538,39 +476,61 @@
 \cvsection{WORK EXPERIENCE}
 
 \cvevent
-	{03/15/2021 - Present}
-	{Java Developer}
-	{Tata Consultancy Services}
-	{Drive progress in a company-wide modernization and migration project leveraging new technologies, language features, and frameworks.}
+	{06/2024 - Present}
+	{Senior Software Engineer}
+    {Raytheon}
+	{Modernize, enhance, and maintain mission critical applications. Incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
 	{\cvlist{
-		\item Enhance and maintain current applications created by my predecessors to meet new business goals, fix implementation errors, and mitigate vulnerabilities
-		\item Design, develop, and maintain new applications, including database tables, for AWS cloud deployment
-		\item Work directly with Experian clients and their technical teams for API integration, testing, and go-live
+		\item Bringing a heavy emphasis on code quality, my contributions have led to improved maintainability and reduced technical debt across multiple applications.
 	}}
 	{
-		% \parbox{\mpwidth}{
 	\begin{table}[h!]
-		\begin{tabular}{p{4cm} p{4cm} p{4cm} }
-			\includegraphics[width=.6cm, height=.4cm]{icons/icons8-amazon-web-services-120.png} AWS 	& \includegraphics[width=.5cm, height=.5cm]{icons/apache_kafka_icon_138937.png} Kafka 		& \includegraphics[width=.6cm, height=.48cm]{icons/icons8-docker-120.png} Docker 		\\
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-openshift-120.png} RedHat OpenShift	& \includegraphics[width=.5cm, height=.5cm]{icons/rabbitmq_logo_icon_170810.png} RabbitMQ	& \includegraphics[width=.6cm, height=.6cm]{icons/icons8-jenkins-120.png} Jenkins	\\
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-java-120.png} Java					& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-mysql-logo-120.png} MySql			& \includegraphics[width=.6cm, height=.48cm]{icons/veracode-removebg-preview.png} Veracode			\\
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/oracle-removebg-preview.png} OracleDB		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-unix-96.png} Unix		\\
+		\begin{tabular}{p{2.5cm} p{2cm} p{2.5cm} p{2.5cm} p{2.5cm} }
+			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/gradle-icon.png} Gradle		& \includegraphics[width=.5cm, height=.5cm]{icons/cucumber_120.png} Cucumber		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-kubernetes-96.png} Kubernetes		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
     	\end{tabular}
 	\end{table}
-	% 	}
 	}
 	{\cvlist{
-		\item My Hackathon idea, inspired by customer conversions, lead to implementation, completed by me, which increased yearly revenue by ~\$800,000 (16\%)
-		\item Designed and developed 13 new microservices to completely replace legacy systems
-		\item Performance improvements of two legacy applications, resulting in 50\% reduction in latency
-  		\item Created and shared new testing techniques and technologies across development teams
-  		\item Enhanced, maintained, and mitigated vulnerabilities of 22 legacy applications
+		\item Became the subject matter expert and single largest contributor to a multi-project cross-team Gradel 2 to Gradle 8 migration.
 	}}
 
-\cvminievent
-{07/-1/2012 - 09/01/2015}
-{Electrical Systems Technician}
-{United State Marine Corps}
+\cvevent
+	{07/2024 - 09/2025}
+	{Software Engineer}
+  {U.S. Department of Defense}
+	{Fullstack development incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
+    {}
+	{
+	\begin{table}[h!]
+		\begin{tabular}{p{2.5cm} p{2cm} p{2cm} p{2cm} p{2cm} }
+			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-react-96.png} React		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-amazon-web-services-120.png} AWS		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-mysql-logo-120.png} MySql		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
+    	\end{tabular}
+	\end{table}
+	}
+	{\cvlist{
+		\item Guided by user feedback, I created a feature to help users quickly identify the topics and context of their next task, which improved their efficiency and task throughput.	
+	}}
+
+\cvevent
+	{03/2021  -  07/2024}
+	{Java Developer}
+	{Tata Consultancy Services: Experian}
+	{}
+	{}
+	{}
+	{\cvlist{
+		\item My Hackathon idea, inspired by customer conversions, lead to implementation, completed by me, which increased yearly revenue by ~\$800,000 (16\%)
+	}}
+
+ \cvminievent
+%  \cvevent
+ {07/2012  -  09/2015}
+ {Electrical Systems Technician}
+ {United State Marine Corps}
+%  {}
+%  {}
+%  {}
+%  {}
 
 
 
