@@ -371,198 +371,303 @@
 %============================================================================%
 \begin{document}
 \columnratio{0.31}
+% Build with pdfLaTeX through latexmk; see README.md.
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[default]{raleway}
+\usepackage{moresize} % Provides the existing \HUGE banner size.
+\usepackage[a4paper,margin=1cm]{geometry}
+\usepackage{paracol}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage{keyval}
+\usepackage{etoolbox}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{maincol}{RGB}{225,0,0}
+\definecolor{darkcol}{RGB}{70,70,70}
+\definecolor{lightcol}{RGB}{245,245,245}
+
+\newcommand{\cvname}{Clayton Asada}
+\newcommand{\cvlocation}{Plano, TX}
+\newcommand{\cvphone}{(916) 801 6154}
+\newcommand{\cvemail}{Casada94@gmail.com}
+\hypersetup{
+  pdftitle={Clayton Asada -- Resume},
+  pdfauthor={Clayton Asada},
+  pdfsubject={Software engineering experience and education},
+  pdflang={en-US}
+}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% Shared layout settings. Widths inside commands are evaluated locally so
+% they follow the current paracol column rather than the full page width.
+\newlength{\cvinset}
+\setlength{\cvinset}{6pt}
+\newlength{\cvsectionbefore}
+\setlength{\cvsectionbefore}{13pt}
+\newlength{\cvsectionafter}
+\setlength{\cvsectionafter}{11pt}
+\newlength{\cventrysep}
+\setlength{\cventrysep}{23pt}
+\newlength{\cvsubsectionsep}
+\setlength{\cvsubsectionsep}{8pt}
+\newlength{\cviconsize}
+\setlength{\cviconsize}{0.5cm}
+\newlength{\cvunderlinewidth}
+\setlength{\cvunderlinewidth}{0.1\textwidth}
+\newlength{\cvheadingwidth}
+\newlength{\cvdatewidth}
+
+% One text box, with the original 6 pt left inset and no table-cell padding.
+\newcommand{\cvtext}[1]{%
+  \par\noindent\hspace*{\cvinset}%
+  \parbox[t]{\dimexpr\linewidth-\cvinset\relax}{#1}\par
+}
+
+\newcommand{\cvsectionheading}[2]{%
+  \par\addvspace{\cvsectionbefore}%
+  \Needspace{4\baselineskip}%
+  \nointerlineskip
+  \cvtext{{#1\bfseries\color{darkcol}\MakeUppercase{#2}\par}%
+    \vspace{3pt}\nointerlineskip
+    \hbox{\color{maincol}\rule{\cvunderlinewidth}{2pt}}}%
+  \nobreak\vspace{\cvsectionafter}%
+}
+\newcommand{\cvsection}[1]{\cvsectionheading{\LARGE}{#1}}
+\newcommand{\cvleftsection}[1]{%
+  \begingroup
+  \setlength{\cvsectionbefore}{12pt}%
+  \setlength{\cvsectionafter}{7pt}%
+  \cvsectionheading{\large}{#1}%
+  \endgroup
+}
+
+% Sidebar skill rows: the name can wrap, and the duration stays right-aligned.
+\newcommand{\cvother}[2]{%
+  \par\noindent
+  \begin{tabular}{@{\hspace{\cvinset}}%
+    >{\raggedright\arraybackslash}p{\dimexpr\linewidth-3\cvinset-30pt\relax}%
+    @{\hspace{\cvinset}}>{\raggedleft\arraybackslash}p{30pt}%
+    @{\hspace{\cvinset}}}
+    \textbf{#1} & \textcolor{maincol}{#2}
+  \end{tabular}\par
+}
+
+\newcommand{\cvlist}[1]{%
+  \begin{itemize}[leftmargin=24pt,rightmargin=0pt,topsep=4pt,
+    itemsep=2pt,parsep=0pt,partopsep=0pt]
+    #1
+  \end{itemize}%
+}
+
+% A heading is indivisible, but the rest of a job may break between blocks.
+% #1 is the badge-width fraction; #2 date; #3 title; #4 employer.
+\newcommand{\cvjobheading}[4]{%
+  \begingroup
+  \setlength{\cvheadingwidth}{\dimexpr\linewidth-\cvinset-12pt\relax}%
+  \setlength{\cvdatewidth}{#1\linewidth}%
+  \noindent\hspace*{\cvinset}%
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}%
+    p{\dimexpr\cvheadingwidth-\cvdatewidth-8pt\relax}@{\hspace{8pt}}r@{}}
+    \textbf{#3} &
+    \colorbox{maincol}{\makebox[\dimexpr\cvdatewidth-2\fboxsep\relax]{%
+      \textcolor{white}{#2}}}\\
+    \textcolor{maincol}{\textbf{#4}} &
+  \end{tabular}\par
+  \endgroup
+}
+
+% Inline technology rows cannot float away from the corresponding job.
+% Each logo fits the same box without stretching its original aspect ratio.
+\newcommand{\cvtech}[2]{%
+  \mbox{\makebox[\cviconsize]{%
+    \includegraphics[width=\cviconsize,height=\cviconsize,keepaspectratio]{icons/#1}}%
+    \hspace{2pt}#2}%
+}
+\newcommand{\cvtechrow}[1]{%
+  \cvtext{\begin{tabular*}{\linewidth}{@{}l@{\extracolsep{\fill}}llll@{}}
+    #1
+  \end{tabular*}}%
+}
+\newcommand{\cvsubheading}[1]{%
+  \par\addvspace{\cvsubsectionsep}%
+  \Needspace{3\baselineskip}%
+  \cvtext{\textbf{#1}}\nobreak\vspace{4pt}%
+}
+
+% Named job fields avoid long sequences of empty positional arguments.
+\makeatletter
+\define@key{cvevent}{date}{\def\cv@date{#1}}
+\define@key{cvevent}{title}{\def\cv@title{#1}}
+\define@key{cvevent}{employer}{\def\cv@employer{#1}}
+\define@key{cvevent}{description}{\def\cv@description{#1}}
+\define@key{cvevent}{work}{\def\cv@work{#1}}
+\define@key{cvevent}{technologies}{\def\cv@technologies{#1}}
+\define@key{cvevent}{achievements}{\def\cv@achievements{#1}}
+\newcommand{\cvevent}[1]{%
+  \par\begingroup
+  \setkeys{cvevent}{date={},title={},employer={},description={},work={},%
+    technologies={},achievements={}}%
+  \setkeys{cvevent}{#1}%
+  \Needspace{6\baselineskip}%
+  \cvjobheading{0.35}{\cv@date}{\cv@title}{\cv@employer}%
+  \nobreak
+  \ifdefempty{\cv@description}{}{%
+    \vspace{5pt}\cvtext{\cv@description}}%
+  \ifdefempty{\cv@work}{}{\cv@work}%
+  \ifdefempty{\cv@technologies}{}{%
+    \cvsubheading{Technology Stack:}\cvtechrow{\cv@technologies}}%
+  \ifdefempty{\cv@achievements}{}{%
+    \cvsubheading{Achievements:}\cv@achievements}%
+  \par\endgroup\addvspace{\cventrysep}%
+}
+\makeatother
+
+\newcommand{\cvminievent}[3]{%
+  \par % The heading's table already keeps this entire entry together.
+  \cvjobheading{0.4}{#1}{#2}{#3}%
+}
+
+% Education fields: date, degree, institution, and optional description.
+\newcommand{\cvmetaevent}[4]{%
+  \par\Needspace{5\baselineskip}%
+  \cvtext{\raggedright
+    {\color{maincol}\bfseries #1\par}%
+    \vspace{5pt}%
+    {\color{darkcol}\bfseries #2\par}%
+    {\color{darkcol}#3\par}%
+    \ifstrempty{#4}{}{\vspace{7pt}#4\par}}%
+  \addvspace{10pt}%
+}
+
+\newcommand{\cvqrcode}{%
+  \par\begingroup\centering
+  \includegraphics[width=\dimexpr0.6\linewidth-2\fboxsep\relax]{images/linkedinQR.png}\par
+  \endgroup
+}
+
+\newcommand{\cvheader}{%
+  \noindent\fcolorbox{white}{darkcol}{%
+    \begin{minipage}[c][3.5cm][c]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+      \centering\color{white}
+      {\HUGE\bfseries\MakeUppercase{\cvname}\par}
+      \vspace{5pt}
+      \rule{0.3\linewidth}{1.25pt}\par
+      \vspace{8pt}
+      {\large\cvlocation\ ---\ \href{tel:+19168016154}{\cvphone}\ ---\
+        \href{mailto:\cvemail}{\cvemail}\par}
+    \end{minipage}}\par
+}
+
+\begin{document}
+\columnratio{0.29}
 \setlength{\columnsep}{2.2em}
 \setlength{\columnseprule}{4pt}
 \colseprulecolor{lightcol}
 \begin{paracol}{2}
 \begin{leftcolumn}
-%---------------------------------------------------------------------------------------
-%	META IMAGE
-%----------------------------------------------------------------------------------------
-\includegraphics[width=\linewidth]{images/headshot.jpg}	%trimming relative to image size
 
-%---------------------------------------------------------------------------------------
-%	META SKILLS
-%----------------------------------------------------------------------------------------
+\includegraphics[width=\linewidth]{images/headshot.jpg}\par
+
 \cvleftsection{Languages}
+\cvother{Java 13+}{5 yrs}
+\cvother{SQL}{5 yrs}
+\cvother{JavaScript}{9 mo}
+\cvother{Python}{1+ yrs}
 
-\cvother{Java 13+} {5 yrs} \\[-2pt] %{1}
+\cvleftsection{Technologies}
+\cvother{Amazon Web Services (AWS)}{5 yrs}
+\cvother{Kubernetes}{2 yrs}
+\cvother{Docker/Podman}{2 yrs}
 
-\cvother{SQL} {5 yrs} \\[-2pt] %{.75}
+\cvleftsection{Tools}
+\cvother{IntelliJ}{3 yrs}
+\cvother{VS Code}{2 yrs}
+\cvother{Neovim}{3+ yrs}
+\cvother{Atlassian Suite}{5 yrs}
 
-\cvother{Javascript/Typescript} {9 mo} \\[-2pt] %{.75}
-
-\cvother{Python} {1+ yrs}  \\[-2pt] %{.5}
-
-\cvleftsection{TECHNOLOGIES}
-
-\cvother{Amazon Web Services (AWS)} {5 yrs} \\[-2pt]
-
-\cvother{Kubernetes} {2 yrs}  \\[-2pt] %{1}
-
-\cvother{Docker/Podman} {2 yrs} \\[-2pt]
-
-\cvleftsection {TOOLS}
-
-\cvother{Intellij} {3 yrs} \\[-2pt]
-
-\cvother{VsCode} {2 yrs} \\[-2pt]
-
-\cvother{NeoVim} {3+ yrs} \\[-2pt]
-
-\cvother{Atlassian Suite} {5 yrs} \\[-2pt]
-
-
-\begin{comment}
-%\vfill\null
-\cvleftsection{CONTACT}
-
-\icontext{MapMarker}{12}{3708 Windstone Dr.\\Plano TX, 75023}{black}\\[6pt]
-\icontext{MobilePhone}{12}{+1 916 801 6154}{black}\\[6pt]
-\iconemail{Envelope}{12}{casada94@gmail.com}{casada94@gmail.com}{black}\\[6pt]
-\end{comment}
-%\vfill\null
-%\cvqrcode{0.7}
-
-%---------------------------------------------------------------------------------------
-%	EDUCATION
-%----------------------------------------------------------------------------------------
-%\newpage
-\cvleftsection{EDUCATION}
-
+\cvleftsection{Education}
 \cvmetaevent
-{08/15/2022 - 05/15/2024}
-{M.S. Computer Science}
-{C.S.U., Long Beach \hfill \textcolor{maincol}{\textbf{GPA: 4.0}}}
-{Computer Science Master’s Program with thesis on AI/ML.  I graduated 2nd in my class and introduced a novel dropout out technique in my thesis, ’Sector-Wise Dropout’.}
-
+  {08/15/2022 -- 05/15/2024}
+  {M.S. Computer Science}
+  {C.S.U., Long Beach \hfill \textcolor{maincol}{\textbf{GPA: 4.0}}}
+  {Computer Science Master's Program with thesis on AI/ML. I graduated 2nd in my class and introduced a novel dropout technique in my thesis, ``Sector-Wise Dropout''.}
 \cvmetaevent
-{08/15/2015 - 05/15/2020}
-{B.S. Computer Science.}
-{C.S.U., Long Beach}
-{}
+  {08/15/2015 -- 05/15/2020}
+  {B.S. Computer Science}
+  {C.S.U., Long Beach}
+  {}
 
-\vfill\null
-\cvqrcode{0.6}
-
-%---------------------------------------------------------------------------------------
-%	CERTIFICATION
-%----------------------------------------------------------------------------------------
-%\newpage
-\begin{comment}
-\cvleftsection{CERTIFICATIONS}
-
-\cvmetaevent
-{Online Classes}
-{}
-{}
-{It is important for me to continuously learn and grow my capabilities. Therefore, I keep myself up to date with online classes through TCS and have enrolled in a Masters Program as California State University, Long Beach.}
-
-%\vfill
-%\cvqrcode{0.7}
-
-%\newpage
-%\mbox{} % hotfix to place qrcode on the bottom when there are not other elements
-%\vfill
-%\cvqrcode{0.7}
-\end{comment}
+% Anchor the QR code near the foot of the sidebar, with a small bottom inset.
+\vfill
+\cvqrcode
+\vspace*{10pt}
 \end{leftcolumn}
 \begin{rightcolumn}
-%---------------------------------------------------------------------------------------
-%	TITLE  HEADER
-%----------------------------------------------------------------------------------------
-\fcolorbox{white}{darkcol}{\begin{minipage}[c][3.5cm][c]{1\mpwidth}
-	\begin {center}
-		\HUGE{ \textbf{ \textcolor{white}{ \uppercase{ Clayton Asada } } } } \\[-24pt]
-		\textcolor{white}{ \rule{0.3\textwidth}{1.25pt} } \\[8pt]
-		%\large{ \textcolor{white} {Software Engineer} } \\[4pt]
-		\large{\textcolor{white} { Plano, TX ---}}
-		\large{\textcolor{white} { (916) 801 6154 ---}}
-		\large{\textcolor{white} { Casada94@gmail.com   } }
-	\end {center}
-\end{minipage}} \\[14pt]
-\vspace{-12pt}
+\cvheader
 
-%---------------------------------------------------------------------------------------
-%	PROFILE
-%----------------------------------------------------------------------------------------
-%\vfill\null
-\cvsection{PROFILE}
+\cvsection{Profile}
+\cvtext{I'm a highly motivated, results-driven software engineer with a strong background in Java development and cloud technologies. I thrive in dynamic environments, consistently delivering innovative solutions that enhance system performance and drive business growth.}
 
-\cvtext{I'm a highly motivated, results-driven software engineer with a stong background in Java development and cloud technologies. I thrive in dynamic environments, consistently delivering innovative solutions that enhance system performance and drive business growth.  I am passionate about leveraging my skills to positively impact projects and continuously expand my knowledge in the ever-evolving tech landscape.  }
+\cvsection{Work Experience}
+\cvevent{
+  date={06/2024 -- Present},
+  title={Senior Software Engineer},
+  employer={Raytheon},
+  description={Modernize, enhance, and maintain mission-critical applications. Incorporate new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.},
+  work={\cvlist{
+    \item Bringing a heavy emphasis on code quality, my contributions have led to improved maintainability and reduced technical debt across multiple applications.
+  }},
+  technologies={
+    \cvtech{icons8-spring-boot-120.png}{Spring Boot} &
+    \cvtech{gradle-icon.png}{Gradle} &
+    \cvtech{cucumber_120.png}{Cucumber} &
+    \cvtech{icons8-kubernetes-96.png}{Kubernetes} &
+    \cvtech{icons8-linux-96.png}{Linux}
+  },
+  achievements={\cvlist{
+    \item Became the subject matter expert and single largest contributor to a multi-project cross-team Gradle 2 to Gradle 8 migration.
+  }}
+}
 
-%---------------------------------------------------------------------------------------
-%	WORK EXPERIENCE
-%----------------------------------------------------------------------------------------
-%\vfill\null
-\cvsection{WORK EXPERIENCE}
+\cvevent{
+  date={07/2024 -- 09/2025},
+  title={Software Engineer},
+  employer={U.S. Department of Defense},
+  description={Full-stack development incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.},
+  technologies={
+    \cvtech{icons8-spring-boot-120.png}{Spring Boot} &
+    \cvtech{icons8-react-96.png}{React} &
+    \cvtech{icons8-amazon-web-services-120.png}{AWS} &
+    \cvtech{icons8-mysql-logo-120.png}{MySQL} &
+    \cvtech{icons8-linux-96.png}{Linux}
+  },
+  achievements={\cvlist{
+    \item Guided by user feedback, I created a feature to help users quickly identify the topics and context of their next task, which improved their efficiency and task throughput.
+  }}
+}
 
-\cvevent
-	{06/2024 - Present}
-	{Senior Software Engineer}
-  {Raytheon}
-	{Modernize, enhance, and maintain mission critical applications. Incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
-	{\cvlist{
-		\item Bringing a heavy emphasis on code quality, my contributions have led to improved maintainability and reduced technical debt across multiple applications.
-	}}
-	{
-	\begin{table}[h!]
-		\begin{tabular}{p{2.5cm} p{2cm} p{2.5cm} p{2.5cm} p{2.5cm} }
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/gradle-icon.png} Gradle		& \includegraphics[width=.5cm, height=.5cm]{icons/cucumber_120.png} Cucumber		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-kubernetes-96.png} Kubernetes		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
-    	\end{tabular}
-	\end{table}
-	}
-	{\cvlist{
-		\item Became the sugject matter expert and single largest contributor to a multi-project cross-team Gradel 2 to Gradle 8 migration.
-	}}
+\cvevent{
+  date={03/2021 -- 07/2024},
+  title={Java Developer},
+  employer={Tata Consultancy Services: Experian},
+  achievements={\cvlist{
+    \item My hackathon idea, inspired by customer conversions, led to implementation, completed by me, which increased yearly revenue by approximately \$800,000 (16\%).
+  }}
+}
 
-\cvevent
-	{07/2024 - 09/2025}
-	{Software Engineer}
-  {U.S. Department of Defense}
-	{Fullstack development incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
-	{\cvlist{
-		\item Frontend: develop common React.js components for multiple user-facing products
-		\item Backend: Update and enhance Spring Boot microservices for large data processing and API’s for powering client focused products	
-	}}
-	{
-	\begin{table}[h!]
-		\begin{tabular}{p{2.5cm} p{2cm} p{2cm} p{2cm} p{2cm} }
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-react-96.png} React		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-amazon-web-services-120.png} AWS		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-mysql-logo-120.png} MySql		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
-    	\end{tabular}
-	\end{table}
-	}
-	{\cvlist{
-		\item Guided by user feedback, I created a feature to help users quickly identify the topics and context of their next task, which improved their efficiency and task throughput.	
-	}}
-
-\cvevent
-	{03/2021  -  07/2024}
-	{Java Developer}
-	{Tata Consultancy Services: Experian}
-	{}
-	{}
-	{}
-	{\cvlist{
-		\item My Hackathon idea, inspired by customer conversions, lead to implementation, completed by me, which increased yearly revenue by ~\$800,000 (16\%)
-		\item Performance improvements of two legacy applications, resulting in 50\% reduction in latency
-	}}
-
-% \cvminievent
-% {07/2012  -  09/2015}
-% {Electrical Systems Technician}
-% {United State Marine Corps}
-
-
-
-% hotfixes to create fake-space to ensure the whole height is used
-% \mbox{}
-% \vfill
-\mbox{}
-\vfill
-\mbox{}
-\vfill
-\mbox{}
+\cvminievent
+  {07/2012 -- 09/2015}
+  {Electrical Systems Technician}
+  {United States Marine Corps}
 \end{rightcolumn}
 \end{paracol}
 \end{document}

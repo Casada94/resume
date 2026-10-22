@@ -1,374 +1,199 @@
-%============================================================================%
-%
-%	DOCUMENT DEFINITION
-%
-%============================================================================%
+% Build with pdfLaTeX through latexmk; see README.md.
+\documentclass[10pt,a4paper]{article}
 
-%we use article class because we want to fully customize the page and don't use a cv template
-\documentclass[10pt,A4]{article}
-
-%for commenting multiple lines out
-\usepackage{verbatim}
-
-%----------------------------------------------------------------------------------------
-%	ENCODING
-%----------------------------------------------------------------------------------------
-
-% we use utf8 since we want to build from any machine
-\usepackage[utf8]{inputenc}
-
-%----------------------------------------------------------------------------------------
-%	LOGIC
-%----------------------------------------------------------------------------------------
-
-% provides \isempty test
-\usepackage{xstring, xifthen}
-
-%----------------------------------------------------------------------------------------
-%	FONT BASICS
-%----------------------------------------------------------------------------------------
-\usepackage[default]{raleway}
-
-% set font default
-\renewcommand*\familydefault{\sfdefault}
 \usepackage[T1]{fontenc}
-
-% more font size definitions
-\usepackage{moresize}
-
-%----------------------------------------------------------------------------------------
-%	FONT AWESOME ICONS
-%---------------------------------------------------------------------------------------- 
-
-% include the fontawesome icon set
-\usepackage{fontawesome}
-
-% use to vertically center content
-% credits to: http://tex.stackexchange.com/questions/7219/how-to-vertically-center-two-images-next-to-each-other
-\newcommand{\vcenteredinclude}[1]{\begingroup
-\setbox0=\hbox{\includegraphics{#1}}%
-\parbox{\wd0}{\box0}\endgroup}
-
-% use to vertically center content
-% credits to: http://tex.stackexchange.com/questions/7219/how-to-vertically-center-two-images-next-to-each-other
-\newcommand*{\vcenteredhbox}[1]{\begingroup
-\setbox0=\hbox{#1}\parbox{\wd0}{\box0}\endgroup}
-
-% icon shortcut
-\newcommand{\icon}[3] {
-	\makebox(#2, #2){\textcolor{maincol}{\csname fa#1\endcsname}}
-}
-
-% icon with text shortcut
-\newcommand{\icontext}[4]{
-	\vcenteredhbox{\icon{#1}{#2}{#3}}  \hspace{2pt}  \parbox{0.9\mpwidth}{\textcolor{#4}{#3}}
-}
-
-% icon with website url
-\newcommand{\iconhref}[5]{
-    \vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{#4}{\textcolor{#5}{#3}}
-}
-
-% icon with email link
-\newcommand{\iconemail}[5]{
-    \vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{mailto:#4}{\textcolor{#5}{#3}}
-}
-
-%----------------------------------------------------------------------------------------
-%	PAGE LAYOUT  DEFINITIONS
-%----------------------------------------------------------------------------------------
-
-% page outer frames (debug-only)
-% \usepackage{showframe}		
-
-% we use paracol to display breakable two columns
+\usepackage[default]{raleway}
+\usepackage{moresize} % Provides the existing \HUGE banner size.
+\usepackage[a4paper,margin=1cm]{geometry}
 \usepackage{paracol}
-
-% define page styles using geometry
-\usepackage[a4paper]{geometry}
-
-% remove all possible margins
-\geometry{top=1cm, bottom=1cm, left=1cm, right=1cm}
-
-\usepackage{fancyhdr}
-\pagestyle{empty}
-
-% space between header and content
-% \setlength{\headheight}{0pt}
-
-% indentation is zero
-\setlength{\parindent}{0mm}
-
-%----------------------------------------------------------------------------------------
-%	TABLE /ARRAY DEFINITIONS
-%---------------------------------------------------------------------------------------- 
-
-% extended aligning of tabular cells
 \usepackage{array}
-
-% custom column right-align with fixed width
-% use like p{size} but via x{size}
-\newcolumntype{x}[1]{%
->{\raggedleft\hspace{0pt}}p{#1}}%
-
-
-%----------------------------------------------------------------------------------------
-%	GRAPHICS DEFINITIONS
-%---------------------------------------------------------------------------------------- 
-
-%for header image
 \usepackage{graphicx}
-
-%for drawing graphics		
-\usepackage{tikz}
-\usetikzlibrary{shapes, backgrounds,mindmap, trees}
-
-%----------------------------------------------------------------------------------------
-%	Color DEFINITIONS
-%---------------------------------------------------------------------------------------- 
-\usepackage{transparent}
-\usepackage{color}
-
-% primary color
-\definecolor{maincol}{RGB}{ 225, 0, 0 }
-
-% accent color, secondary
-% \definecolor{accentcol}{RGB}{ 250, 150, 10 }
-
-% dark color
-\definecolor{darkcol}{RGB}{ 70, 70, 70 }
-
-% light color
-\definecolor{lightcol}{RGB}{245,245,245}
-
-
-% Package for links, must be the last package used
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage{keyval}
+\usepackage{etoolbox}
 \usepackage[hidelinks]{hyperref}
 
-% returns minipage width minus two times \fboxsep
-% to keep padding included in width calculations
-% can also be used for other boxes / environments
-\newcommand{\mpwidth}{\linewidth-\fboxsep-\fboxsep}
+\definecolor{maincol}{RGB}{225,0,0}
+\definecolor{darkcol}{RGB}{70,70,70}
+\definecolor{lightcol}{RGB}{245,245,245}
 
-
-%============================================================================%
-%
-%	CV COMMANDS
-%
-%============================================================================%
-
-%----------------------------------------------------------------------------------------
-%	 CV LIST
-%----------------------------------------------------------------------------------------
-
-% renders a standard latex list but abstracts away the environment definition (begin/end)
-\newcommand{\cvlist}[1] {
-	\begin{itemize}{#1}\end{itemize}
+\newcommand{\cvname}{Clayton Asada}
+\newcommand{\cvlocation}{Plano, TX}
+\newcommand{\cvphone}{(916) 801 6154}
+\newcommand{\cvemail}{Casada94@gmail.com}
+\hypersetup{
+  pdftitle={Clayton Asada -- Resume},
+  pdfauthor={Clayton Asada},
+  pdfsubject={Software engineering experience and education},
+  pdflang={en-US}
 }
 
-%----------------------------------------------------------------------------------------
-%	 CV TEXT
-%----------------------------------------------------------------------------------------
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
 
-% base class to wrap any text based stuff here. Renders like a paragraph.
-% Allows complex commands to be passed, too.
-% param 1: *any
-\newcommand{\cvtext}[1] {
-	\begin{tabular*}{1\mpwidth}{p{0.98\mpwidth}}
-		\parbox{1\mpwidth}{#1}
-	\end{tabular*}
+% Shared layout settings. Widths inside commands are evaluated locally so
+% they follow the current paracol column rather than the full page width.
+\newlength{\cvinset}
+\setlength{\cvinset}{6pt}
+\newlength{\cvsectionbefore}
+\setlength{\cvsectionbefore}{13pt}
+\newlength{\cvsectionafter}
+\setlength{\cvsectionafter}{11pt}
+\newlength{\cventrysep}
+\setlength{\cventrysep}{23pt}
+\newlength{\cvsubsectionsep}
+\setlength{\cvsubsectionsep}{8pt}
+\newlength{\cviconsize}
+\setlength{\cviconsize}{0.5cm}
+\newlength{\cvunderlinewidth}
+\setlength{\cvunderlinewidth}{0.1\textwidth}
+\newlength{\cvheadingwidth}
+\newlength{\cvdatewidth}
+
+% One text box, with the original 6 pt left inset and no table-cell padding.
+\newcommand{\cvtext}[1]{%
+  \par\noindent\hspace*{\cvinset}%
+  \parbox[t]{\dimexpr\linewidth-\cvinset\relax}{#1}\par
 }
 
-%----------------------------------------------------------------------------------------
-%	CV RIGHT SECTION
-%----------------------------------------------------------------------------------------
-
-% Renders a a CV section headline with a nice underline in main color.
-% param 1: section title
-\newcommand{\cvsection}[1] {
-	\vspace{10pt}
-	\cvtext{
-		\textbf{\LARGE{\textcolor{darkcol}{\uppercase{#1}}}}\\[-6pt]
-		\textcolor{maincol}{ \rule{0.1\textwidth}{2pt} } \\
-	}
-	\vspace{0pt}
+\newcommand{\cvsectionheading}[2]{%
+  \par\addvspace{\cvsectionbefore}%
+  \Needspace{4\baselineskip}%
+  \nointerlineskip
+  \cvtext{{#1\bfseries\color{darkcol}\MakeUppercase{#2}\par}%
+    \vspace{3pt}\nointerlineskip
+    \hbox{\color{maincol}\rule{\cvunderlinewidth}{2pt}}}%
+  \nobreak\vspace{\cvsectionafter}%
+}
+\newcommand{\cvsection}[1]{\cvsectionheading{\LARGE}{#1}}
+\newcommand{\cvleftsection}[1]{%
+  \begingroup
+  \setlength{\cvsectionbefore}{12pt}%
+  \setlength{\cvsectionafter}{7pt}%
+  \cvsectionheading{\large}{#1}%
+  \endgroup
 }
 
-%----------------------------------------------------------------------------------------
-%	CV LEFT SECTION
-%----------------------------------------------------------------------------------------
-
-% Renders a a CV section headline with a nice underline in main color.
-% param 1: section title
-\newcommand{\cvleftsection}[1] {
-	\vspace{9pt}
-	\cvtext{
-		\textbf{\large{\textcolor{darkcol}{\uppercase{#1}}}}\\[-6pt]
-		\textcolor{maincol}{ \rule{0.1\textwidth}{2pt} } \\
-	}
-	\vspace{-3pt}
+% Sidebar skill rows: the name can wrap, and the duration stays right-aligned.
+\newcommand{\cvother}[2]{%
+  \par\noindent
+  \begin{tabular}{@{\hspace{\cvinset}}%
+    >{\raggedright\arraybackslash}p{\dimexpr\linewidth-3\cvinset-30pt\relax}%
+    @{\hspace{\cvinset}}>{\raggedleft\arraybackslash}p{30pt}%
+    @{\hspace{\cvinset}}}
+    \textbf{#1} & \textcolor{maincol}{#2}
+  \end{tabular}\par
 }
 
-%----------------------------------------------------------------------------------------
-%	META SKILL
-%----------------------------------------------------------------------------------------
-
-% Renders a progress-bar to indicate a certain skill in percent.
-% param 1: name of the skill / tech / etc.
-% param 2: level (for example in years)
-% param 3: percent, values range from 0 to 1
-\newcommand{\cvskill}[3] {
-	\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
- 		\textcolor{black}{\textbf{#1}} & \textcolor{maincol}{#2}\\
-	\end{tabular*}%
-
-	\hspace{0pt}
-	\begin{tikzpicture}[scale=1,rounded corners=2pt,very thin]
-		\fill [lightcol] (0,0) rectangle (1\mpwidth, 0.15);
-		\fill [maincol] (0,0) rectangle (#3\mpwidth, 0.15);
-  	\end{tikzpicture}%
+\newcommand{\cvlist}[1]{%
+  \begin{itemize}[leftmargin=24pt,rightmargin=0pt,topsep=4pt,
+    itemsep=2pt,parsep=0pt,partopsep=0pt]
+    #1
+  \end{itemize}%
 }
 
-%----------------------------------------------------------------------------------------
-%	META SKILL
-%----------------------------------------------------------------------------------------
-
-% Renders a progress-bar to indicate a certain skill in percent.
-% param 1: name of the skill / tech / etc.
-% param 2: level (for example in years)
-\newcommand{\cvother}[2] {
-	\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
- 		\textcolor{black}{\textbf{#1}} & \textcolor{maincol}{#2}\\
-	\end{tabular*}%
-
-
+% A heading is indivisible, but the rest of a job may break between blocks.
+% #1 is the badge-width fraction; #2 date; #3 title; #4 employer.
+\newcommand{\cvjobheading}[4]{%
+  \begingroup
+  \setlength{\cvheadingwidth}{\dimexpr\linewidth-\cvinset-12pt\relax}%
+  \setlength{\cvdatewidth}{#1\linewidth}%
+  \noindent\hspace*{\cvinset}%
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}%
+    p{\dimexpr\cvheadingwidth-\cvdatewidth-8pt\relax}@{\hspace{8pt}}r@{}}
+    \textbf{#3} &
+    \colorbox{maincol}{\makebox[\dimexpr\cvdatewidth-2\fboxsep\relax]{%
+      \textcolor{white}{#2}}}\\
+    \textcolor{maincol}{\textbf{#4}} &
+  \end{tabular}\par
+  \endgroup
 }
 
-
-%----------------------------------------------------------------------------------------
-%	 CV EVENT
-%----------------------------------------------------------------------------------------
-
-% Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
-% is glued together when a pagebreak appears).
-% Additional Information can be passed in text or list form (or other environments).
-% the work you did
-% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
-% param 2:	 event name (job position etc.)
-% param 3: Customer, Employer, Industry
-% param 4: Short description (optional)
-% param 5: work done (optional)
-% param 6: technologies include (optional)
-% param 7: achievements (optional)
-\newcommand{\cvevent}[7] {
-
-	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
-	% if you need more control on page breaks, remove the parbox
-	\parbox{\mpwidth}{
-		\begin{tabular*}{1\mpwidth}{p{0.6\mpwidth}  r}
-	 		\textcolor{black}{\textbf{#2}} & \colorbox{maincol}{\makebox[0.35\mpwidth]{\textcolor{white}{#1}}} \\
-			\textcolor{maincol}{\textbf{#3}} & \\
-		\end{tabular*}\\[5pt]
-
-		\ifthenelse{\isempty{#4}}{}{
-			\cvtext{#4}\\
-		}
-	}
-
-	\ifthenelse{\isempty{#5}}{}{
-		\vspace{0pt}
-		{#5}
-	}
-
-	\ifthenelse{\isempty{#6}}{}{
-		\vspace{5pt}
-		\cvtext{\textbf{Technology Stack:}}\\[-7pt]
-		\vspace{-3mm}
-		{#6}
-	}
-
-	\ifthenelse{\isempty{#7}}{}{
-		% \vspace{5pt}
-		\cvtext{\textbf{Achievements:}}\\[-7pt]
-		{#7}
-	}
-	\vspace{15pt}
+% Inline technology rows cannot float away from the corresponding job.
+% Each logo fits the same box without stretching its original aspect ratio.
+\newcommand{\cvtech}[2]{%
+  \mbox{\makebox[\cviconsize]{%
+    \includegraphics[width=\cviconsize,height=\cviconsize,keepaspectratio]{icons/#1}}%
+    \hspace{2pt}#2}%
+}
+\newcommand{\cvtechrow}[1]{%
+  \cvtext{\begin{tabular*}{\linewidth}{@{}l@{\extracolsep{\fill}}llll@{}}
+    #1
+  \end{tabular*}}%
+}
+\newcommand{\cvsubheading}[1]{%
+  \par\addvspace{\cvsubsectionsep}%
+  \Needspace{3\baselineskip}%
+  \cvtext{\textbf{#1}}\nobreak\vspace{4pt}%
 }
 
-%----------------------------------------------------------------------------------------
-%	 CV MINI EVENT
-%----------------------------------------------------------------------------------------
+% Named job fields avoid long sequences of empty positional arguments.
+\makeatletter
+\define@key{cvevent}{date}{\def\cv@date{#1}}
+\define@key{cvevent}{title}{\def\cv@title{#1}}
+\define@key{cvevent}{employer}{\def\cv@employer{#1}}
+\define@key{cvevent}{description}{\def\cv@description{#1}}
+\define@key{cvevent}{work}{\def\cv@work{#1}}
+\define@key{cvevent}{technologies}{\def\cv@technologies{#1}}
+\define@key{cvevent}{achievements}{\def\cv@achievements{#1}}
+\newcommand{\cvevent}[1]{%
+  \par\begingroup
+  \setkeys{cvevent}{date={},title={},employer={},description={},work={},%
+    technologies={},achievements={}}%
+  \setkeys{cvevent}{#1}%
+  \Needspace{6\baselineskip}%
+  \cvjobheading{0.35}{\cv@date}{\cv@title}{\cv@employer}%
+  \nobreak
+  \ifdefempty{\cv@description}{}{%
+    \vspace{5pt}\cvtext{\cv@description}}%
+  \ifdefempty{\cv@work}{}{\cv@work}%
+  \ifdefempty{\cv@technologies}{}{%
+    \cvsubheading{Technology Stack:}\cvtechrow{\cv@technologies}}%
+  \ifdefempty{\cv@achievements}{}{%
+    \cvsubheading{Achievements:}\cv@achievements}%
+  \par\endgroup\addvspace{\cventrysep}%
+}
+\makeatother
 
-% Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
-% is glued together when a pagebreak appears).
-% Additional Information can be passed in text or list form (or other environments).
-% the work you did
-% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
-% param 2:	 event name (job position etc.)
-% param 3: Customer, Employer, Industry
-\newcommand{\cvminievent}[3] {
-
-	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
-	% if you need more control on page breaks, remove the parbox
-	\parbox{\mpwidth}{
-		\begin{tabular*}{1\mpwidth}{p{0.55\mpwidth}  r}
-	 		\textcolor{black}{\textbf{#2}} & \colorbox{maincol}{\makebox[0.4\mpwidth]{\textcolor{white}{#1}}} \\
-			\textcolor{maincol}{\textbf{#3}} & \\
-		\end{tabular*}
-
-	}
-
+\newcommand{\cvminievent}[3]{%
+  \par % The heading's table already keeps this entire entry together.
+  \cvjobheading{0.4}{#1}{#2}{#3}%
 }
 
-
-
-%----------------------------------------------------------------------------------------
-%	 CV META EVENT
-%----------------------------------------------------------------------------------------
-
-% Renders a CV event on the sidebar
-% param 1: title
-% param 2: subtitle (optional)
-% param 3: customer, employer, etc,. (optional)
-% param 4: info text (optional)
-\newcommand{\cvmetaevent}[4] {
-    \vspace{-7pt}
-	\textcolor{maincol} {\cvtext{\textbf{\begin{flushleft}#1\end{flushleft}}}}\\[-5pt]
-
-	\ifthenelse{\isempty{#2}}{}{
-	\textcolor{darkcol} {\cvtext{\textbf{#2}} }
-	}
-
-	\ifthenelse{\isempty{#3}}{}{
-		\cvtext{{ \textcolor{darkcol} {#3} }}\\
-	}
-
-	\cvtext{#4}\\[-25pt]
-	\vspace{27pt}
+% Education fields: date, degree, institution, and optional description.
+\newcommand{\cvmetaevent}[4]{%
+  \par\Needspace{5\baselineskip}%
+  \cvtext{\raggedright
+    {\color{maincol}\bfseries #1\par}%
+    \vspace{5pt}%
+    {\color{darkcol}\bfseries #2\par}%
+    {\color{darkcol}#3\par}%
+    \ifstrempty{#4}{}{\vspace{7pt}#4\par}}%
+  \addvspace{10pt}%
 }
 
-%---------------------------------------------------------------------------------------
-%	QR CODE
-%----------------------------------------------------------------------------------------
-
-% Renders a qrcode image (centered, relative to the parentwidth)
-% param 1: percent width, from 0 to 1
-\newcommand{\cvqrcode}[1] {
-	\begin{center}
-		\includegraphics[width={#1}\mpwidth]{images/linkedinQR.png}
-	\end{center}
+\newcommand{\cvqrcode}{%
+  \par\begingroup\centering
+  \includegraphics[width=\dimexpr0.6\linewidth-2\fboxsep\relax]{images/linkedinQR.png}\par
+  \endgroup
 }
 
+\newcommand{\cvheader}{%
+  \noindent\fcolorbox{white}{darkcol}{%
+    \begin{minipage}[c][3.5cm][c]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+      \centering\color{white}
+      {\HUGE\bfseries\MakeUppercase{\cvname}\par}
+      \vspace{5pt}
+      \rule{0.3\linewidth}{1.25pt}\par
+      \vspace{8pt}
+      {\large\cvlocation\ ---\ \href{tel:+19168016154}{\cvphone}\ ---\
+        \href{mailto:\cvemail}{\cvemail}\par}
+    \end{minipage}}\par
+}
 
-%============================================================================%
-%
-%
-%
-%	DOCUMENT CONTENT
-%
-%
-%
-%============================================================================%
 \begin{document}
 \columnratio{0.29}
 \setlength{\columnsep}{2.2em}
@@ -376,172 +201,99 @@
 \colseprulecolor{lightcol}
 \begin{paracol}{2}
 \begin{leftcolumn}
-%---------------------------------------------------------------------------------------
-%	META IMAGE
-%----------------------------------------------------------------------------------------
-\includegraphics[width=\linewidth]{images/headshot.jpg}	%trimming relative to image size
+\includegraphics[width=\linewidth]{images/headshot.jpg}\par
 
-%---------------------------------------------------------------------------------------
-%	META SKILLS
-%----------------------------------------------------------------------------------------
-\cvleftsection{Languages} \\
-\cvother{Java 13+} {5 yrs} 
-\cvother{SQL} {5 yrs} 
-\cvother{Javascript} {9 mo} 
-\cvother{Python} {1+ yrs}  
+\cvleftsection{Languages}
+\cvother{Java 13+}{5 yrs}
+\cvother{SQL}{5 yrs}
+\cvother{JavaScript}{9 mo}
+\cvother{Python}{1+ yrs}
 
-\cvleftsection{TECHNOLOGIES} \\
-\cvother{Amazon Web Services (AWS)} {5 yrs} 
-\cvother{Kubernetes} {2 yrs}  
-\cvother{Docker/Podman} {2 yrs} 
+\cvleftsection{Technologies}
+\cvother{Amazon Web Services (AWS)}{5 yrs}
+\cvother{Kubernetes}{2 yrs}
+\cvother{Docker/Podman}{2 yrs}
 
-\cvleftsection {TOOLS} \\
-\cvother{Intellij} {3 yrs} 
-\cvother{VsCode} {2 yrs} 
-\cvother{NeoVim} {3+ yrs} 
-\cvother{Atlassian Suite} {5 yrs} 
+\cvleftsection{Tools}
+\cvother{IntelliJ}{3 yrs}
+\cvother{VS Code}{2 yrs}
+\cvother{Neovim}{3+ yrs}
+\cvother{Atlassian Suite}{5 yrs}
 
-
-%---------------------------------------------------------------------------------------
-%	EDUCATION
-%----------------------------------------------------------------------------------------
-%\newpage
-\cvleftsection{EDUCATION}
-
+\cvleftsection{Education}
 \cvmetaevent
-{08/15/2022 - 05/15/2024}
-{M.S. Computer Science}
-{C.S.U., Long Beach \hfill \textcolor{maincol}{\textbf{GPA: 4.0}}}
-{Computer Science Master’s Program with thesis on AI/ML.  I graduated 2nd in my class and introduced a novel dropout out technique in my thesis, ’Sector-Wise Dropout’.}
-
+  {08/15/2022 -- 05/15/2024}
+  {M.S. Computer Science}
+  {C.S.U., Long Beach \hfill \textcolor{maincol}{\textbf{GPA: 4.0}}}
+  {Computer Science Master's Program with thesis on AI/ML. I graduated 2nd in my class and introduced a novel dropout technique in my thesis, ``Sector-Wise Dropout''.}
 \cvmetaevent
-{08/15/2015 - 05/15/2020}
-{B.S. Computer Science.}
-{C.S.U., Long Beach}
-{}
+  {08/15/2015 -- 05/15/2020}
+  {B.S. Computer Science}
+  {C.S.U., Long Beach}
+  {}
 
-\vfill\null
-\cvqrcode{0.6}
-
-%---------------------------------------------------------------------------------------
-%	CERTIFICATION
-%----------------------------------------------------------------------------------------
-%\newpage
-\begin{comment}
-\cvleftsection{CERTIFICATIONS}
-
-\cvmetaevent
-{Online Classes}
-{}
-{}
-{It is important for me to continuously learn and grow my capabilities. Therefore, I keep myself up to date with online classes through TCS and have enrolled in a Masters Program as California State University, Long Beach.}
-
-%\vfill
-%\cvqrcode{0.7}
-
-%\newpage
-%\mbox{} % hotfix to place qrcode on the bottom when there are not other elements
-%\vfill
-%\cvqrcode{0.7}
-\end{comment}
+% Anchor the QR code near the foot of the sidebar, with a small bottom inset.
+\vfill
+\cvqrcode
+\vspace*{10pt}
 \end{leftcolumn}
 \begin{rightcolumn}
-%---------------------------------------------------------------------------------------
-%	TITLE  HEADER
-%----------------------------------------------------------------------------------------
-\fcolorbox{white}{darkcol}{\begin{minipage}[c][3.5cm][c]{1\mpwidth}
-	\begin {center}
-		\HUGE{ \textbf{ \textcolor{white}{ \uppercase{ Clayton Asada } } } } \\[-24pt]
-		\textcolor{white}{ \rule{0.3\textwidth}{1.25pt} } \\[8pt]
-		%\large{ \textcolor{white} {Software Engineer} } \\[4pt]
-		\large{\textcolor{white} { Plano, TX ---}}
-		\large{\textcolor{white} { (916) 801 6154 ---}}
-		\large{\textcolor{white} { Casada94@gmail.com   } }
-	\end {center}
-\end{minipage}} \\[14pt]
-\vspace{-12pt}
+\cvheader
 
-%---------------------------------------------------------------------------------------
-%	PROFILE
-%----------------------------------------------------------------------------------------
-%\vfill\null
-\cvsection{PROFILE}
+\cvsection{Profile}
+\cvtext{I'm a highly motivated, results-driven software engineer with a strong background in Java development and cloud technologies. I thrive in dynamic environments, consistently delivering innovative solutions that enhance system performance and drive business growth.}
 
-\cvtext{I'm a highly motivated, results-driven software engineer with a strong background in Java development and cloud technologies. I thrive in dynamic environments, consistently delivering innovative solutions that enhance system performance and drive business growth.  }
+\cvsection{Work Experience}
+\cvevent{
+  date={06/2024 -- Present},
+  title={Senior Software Engineer},
+  employer={Raytheon},
+  description={Modernize, enhance, and maintain mission-critical applications. Incorporate new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.},
+  work={\cvlist{
+    \item Bringing a heavy emphasis on code quality, my contributions have led to improved maintainability and reduced technical debt across multiple applications.
+  }},
+  technologies={
+    \cvtech{icons8-spring-boot-120.png}{Spring Boot} &
+    \cvtech{gradle-icon.png}{Gradle} &
+    \cvtech{cucumber_120.png}{Cucumber} &
+    \cvtech{icons8-kubernetes-96.png}{Kubernetes} &
+    \cvtech{icons8-linux-96.png}{Linux}
+  },
+  achievements={\cvlist{
+    \item Became the subject matter expert and single largest contributor to a multi-project cross-team Gradle 2 to Gradle 8 migration.
+  }}
+}
 
-%---------------------------------------------------------------------------------------
-%	WORK EXPERIENCE
-%----------------------------------------------------------------------------------------
-%\vfill\null
-\cvsection{WORK EXPERIENCE}
+\cvevent{
+  date={07/2024 -- 09/2025},
+  title={Software Engineer},
+  employer={U.S. Department of Defense},
+  description={Full-stack development incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.},
+  technologies={
+    \cvtech{icons8-spring-boot-120.png}{Spring Boot} &
+    \cvtech{icons8-react-96.png}{React} &
+    \cvtech{icons8-amazon-web-services-120.png}{AWS} &
+    \cvtech{icons8-mysql-logo-120.png}{MySQL} &
+    \cvtech{icons8-linux-96.png}{Linux}
+  },
+  achievements={\cvlist{
+    \item Guided by user feedback, I created a feature to help users quickly identify the topics and context of their next task, which improved their efficiency and task throughput.
+  }}
+}
 
-\cvevent
-	{06/2024 - Present}
-	{Senior Software Engineer}
-    {Raytheon}
-	{Modernize, enhance, and maintain mission critical applications. Incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
-	{\cvlist{
-		\item Bringing a heavy emphasis on code quality, my contributions have led to improved maintainability and reduced technical debt across multiple applications.
-	}}
-	{
-	\begin{table}[h!]
-		\begin{tabular}{p{2.5cm} p{2cm} p{2.5cm} p{2.5cm} p{2.5cm} }
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/gradle-icon.png} Gradle		& \includegraphics[width=.5cm, height=.5cm]{icons/cucumber_120.png} Cucumber		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-kubernetes-96.png} Kubernetes		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
-    	\end{tabular}
-	\end{table}
-	}
-	{\cvlist{
-		\item Became the subject matter expert and single largest contributor to a multi-project cross-team Gradel 2 to Gradle 8 migration.
-	}}
+\cvevent{
+  date={03/2021 -- 07/2024},
+  title={Java Developer},
+  employer={Tata Consultancy Services: Experian},
+  achievements={\cvlist{
+    \item My hackathon idea, inspired by customer conversions, led to implementation, completed by me, which increased yearly revenue by approximately \$800,000 (16\%).
+  }}
+}
 
-\cvevent
-	{07/2024 - 09/2025}
-	{Software Engineer}
-  {U.S. Department of Defense}
-	{Fullstack development incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
-    {}
-	{
-	\begin{table}[h!]
-		\begin{tabular}{p{2.5cm} p{2cm} p{2cm} p{2cm} p{2cm} }
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-react-96.png} React		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-amazon-web-services-120.png} AWS		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-mysql-logo-120.png} MySql		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
-    	\end{tabular}
-	\end{table}
-	}
-	{\cvlist{
-		\item Guided by user feedback, I created a feature to help users quickly identify the topics and context of their next task, which improved their efficiency and task throughput.	
-	}}
-
-\cvevent
-	{03/2021  -  07/2024}
-	{Java Developer}
-	{Tata Consultancy Services: Experian}
-	{}
-	{}
-	{}
-	{\cvlist{
-		\item My Hackathon idea, inspired by customer conversions, lead to implementation, completed by me, which increased yearly revenue by ~\$800,000 (16\%)
-	}}
-
- \cvminievent
-%  \cvevent
- {07/2012  -  09/2015}
- {Electrical Systems Technician}
- {United State Marine Corps}
-%  {}
-%  {}
-%  {}
-%  {}
-
-
-
-% hotfixes to create fake-space to ensure the whole height is used
-% \mbox{}
-% \vfill
-\mbox{}
-\vfill
-\mbox{}
-\vfill
-\mbox{}
+\cvminievent
+  {07/2012 -- 09/2015}
+  {Electrical Systems Technician}
+  {United States Marine Corps}
 \end{rightcolumn}
 \end{paracol}
 \end{document}
