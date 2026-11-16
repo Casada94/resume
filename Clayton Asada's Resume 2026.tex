@@ -165,9 +165,9 @@
 % renders a standard latex list but abstracts away the environment definition (begin/end)
 \newcommand{\cvlist}[1] {
 	\begin{itemize}
-		\setlength{\itemsep}{2pt}
+		\setlength{\itemsep}{0pt}
 		\setlength{\parsep}{0pt}
-		\setlength{\topsep}{2pt}
+		\setlength{\topsep}{0pt}
 		\setlength{\partopsep}{0pt}
 		{#1}
 	\end{itemize}
@@ -193,7 +193,7 @@
 % Renders a a CV section headline with a nice underline in main color.
 % param 1: section title
 \newcommand{\cvsection}[1] {
-	\vspace{6pt}
+	\vspace{3pt}
 	\cvtext{
 		\textbf{\LARGE{\textcolor{darkcol}{\uppercase{#1}}}}\\[-6pt]
 		\textcolor{maincol}{ \rule{0.1\textwidth}{2pt} } \\
@@ -275,7 +275,7 @@
 		\begin{tabular*}{1\mpwidth}{p{0.6\mpwidth}  r}
 	 		\textcolor{black}{\textbf{#2}} & \colorbox{maincol}{\makebox[0.35\mpwidth]{\textcolor{white}{#1}}} \\
 			\textcolor{maincol}{\textbf{#3}} & \\
-		\end{tabular*}\\[3pt]
+		\end{tabular*}\\[1pt]
 
 		\ifthenelse{\isempty{#4}}{}{
 			\cvtext{#4}\\
@@ -289,16 +289,16 @@
 
 	\ifthenelse{\isempty{#6}}{}{
 		\vspace{3pt}
-		\cvtext{\textbf{Technology Stack:}}\\[-3pt]
+		\cvtext{\textbf{Technology Stack:}}\\[-5pt]
 		{#6}
-		\vspace{0pt}
+		\vspace{-2pt}
 	}
 
 	\ifthenelse{\isempty{#7}}{}{
 		\cvtext{\textbf{Achievements:}}\\[-7pt]
 		{#7}
 	}
-	\vspace{2pt}
+	\vspace{8pt}
 }
 
 %----------------------------------------------------------------------------------------
@@ -493,7 +493,7 @@
 %	WORK EXPERIENCE
 %----------------------------------------------------------------------------------------
 %\vfill\null
-\vspace{5pt}
+\vspace{10pt}
 \cvsection{WORK EXPERIENCE}
 
 \cvevent
@@ -512,15 +512,15 @@
 	\end{table}
 	}
 	{\cvlist{
-		\item Became the subject matter expert and single largest contributor to a multi-project cross-team Gradle 2 to Gradle 8 migration.
-		\item Recognized for improving developer productivity by building internal developer tooling, including AI agent skills that codified our complex, custom deployment framework for agentic workflows.
+		\item Subject matter expert and largest contributor to a cross-team Gradle 2 to Gradle 8 migration spanning 3 teams and about 45 applications.
+		\item Built internal tooling used by 20+ engineers, including AI agent skills that codified our complex, custom deployment framework for agentic workflows.
 	}}
 
 \cvevent
 	{07/2024 - 09/2025}
 	{Software Engineer}
   {U.S. Department of Defense}
-	{Developed full-stack features across Spring Boot, React, and AWS, partnering with end users to turn their feedback into tools that streamlined their daily workflows.}
+	{Developed full-stack features across Spring Boot, React, and AWS, partnering with end users to turn their feedback into tools used by about 1,000 people that streamlined their daily workflows.}
     {}
 	{
 	\begin{table}[h!]
@@ -530,7 +530,8 @@
 	\end{table}
 	}
 	{\cvlist{
-		\item Guided by user feedback, I created a feature to help users quickly identify the topics and context of their next task, which improved their efficiency and task throughput.	
+		\item Guided by user feedback, built a feature that helps users quickly identify the topics and context of their next task; earned a cash bonus award and was briefed to senior leadership.
+		\item Built Spring Boot microservices and APIs processing millions of records.
 	}}
 
 \cvevent
@@ -542,6 +543,7 @@
 	{}
 	{\cvlist{
 		\item My Hackathon idea, inspired by customer conversations, led to implementation, completed by me, which increased yearly revenue by \textasciitilde\$800,000 (16\%)
+		\item Built 13 microservices that replaced legacy systems during a company-wide AWS cloud migration.
 	}}
 
 % hotfixes to create fake-space to ensure the whole height is used
