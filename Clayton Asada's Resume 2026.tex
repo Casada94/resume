@@ -105,6 +105,7 @@
 
 % extended aligning of tabular cells
 \usepackage{array}
+\setlength{\intextsep}{2pt}
 
 % custom column right-align with fixed width
 % use like p{size} but via x{size}
@@ -163,7 +164,13 @@
 
 % renders a standard latex list but abstracts away the environment definition (begin/end)
 \newcommand{\cvlist}[1] {
-	\begin{itemize}{#1}\end{itemize}
+	\begin{itemize}
+		\setlength{\itemsep}{2pt}
+		\setlength{\parsep}{0pt}
+		\setlength{\topsep}{2pt}
+		\setlength{\partopsep}{0pt}
+		{#1}
+	\end{itemize}
 }
 
 %----------------------------------------------------------------------------------------
@@ -186,7 +193,7 @@
 % Renders a a CV section headline with a nice underline in main color.
 % param 1: section title
 \newcommand{\cvsection}[1] {
-	\vspace{10pt}
+	\vspace{6pt}
 	\cvtext{
 		\textbf{\LARGE{\textcolor{darkcol}{\uppercase{#1}}}}\\[-6pt]
 		\textcolor{maincol}{ \rule{0.1\textwidth}{2pt} } \\
@@ -237,7 +244,7 @@
 % param 1: name of the skill / tech / etc.
 % param 2: level (for example in years)
 \newcommand{\cvother}[2] {
-	\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
+	\begin{tabular*}{1\mpwidth}{>{\raggedright\arraybackslash}p{0.72\mpwidth}  r}
  		\textcolor{black}{\textbf{#1}} & \textcolor{maincol}{#2}\\
 	\end{tabular*}%
 
@@ -268,7 +275,7 @@
 		\begin{tabular*}{1\mpwidth}{p{0.6\mpwidth}  r}
 	 		\textcolor{black}{\textbf{#2}} & \colorbox{maincol}{\makebox[0.35\mpwidth]{\textcolor{white}{#1}}} \\
 			\textcolor{maincol}{\textbf{#3}} & \\
-		\end{tabular*}\\[5pt]
+		\end{tabular*}\\[3pt]
 
 		\ifthenelse{\isempty{#4}}{}{
 			\cvtext{#4}\\
@@ -281,18 +288,17 @@
 	}
 
 	\ifthenelse{\isempty{#6}}{}{
-		\vspace{5pt}
-		\cvtext{\textbf{Technology Stack:}}\\[-7pt]
-		\vspace{-3mm}
+		\vspace{3pt}
+		\cvtext{\textbf{Technology Stack:}}\\[-3pt]
 		{#6}
+		\vspace{0pt}
 	}
 
 	\ifthenelse{\isempty{#7}}{}{
-		% \vspace{5pt}
 		\cvtext{\textbf{Achievements:}}\\[-7pt]
 		{#7}
 	}
-	\vspace{15pt}
+	\vspace{2pt}
 }
 
 %----------------------------------------------------------------------------------------
@@ -332,19 +338,22 @@
 % param 3: customer, employer, etc,. (optional)
 % param 4: info text (optional)
 \newcommand{\cvmetaevent}[4] {
-    \vspace{-7pt}
-	\textcolor{maincol} {\cvtext{\textbf{\begin{flushleft}#1\end{flushleft}}}}\\[-5pt]
+    \vspace{-4pt}
+	\textcolor{maincol} {\cvtext{\raggedright\textbf{#1}}}\\[-5pt]
 
 	\ifthenelse{\isempty{#2}}{}{
-	\textcolor{darkcol} {\cvtext{\textbf{#2}} }
+	\textcolor{darkcol} {\cvtext{\raggedright\textbf{#2}} }
 	}
 
 	\ifthenelse{\isempty{#3}}{}{
-		\cvtext{{ \textcolor{darkcol} {#3} }}\\
+		\cvtext{\raggedright{ \textcolor{darkcol} {#3} }}%
+		\ifthenelse{\isempty{#4}}{}{\\}
 	}
 
-	\cvtext{#4}\\[-25pt]
-	\vspace{27pt}
+	\ifthenelse{\isempty{#4}}{}{
+		\cvtext{\raggedright #4}\\
+	}
+	\vspace{6pt}
 }
 
 %---------------------------------------------------------------------------------------
@@ -354,9 +363,9 @@
 % Renders a qrcode image (centered, relative to the parentwidth)
 % param 1: percent width, from 0 to 1
 \newcommand{\cvqrcode}[1] {
-	\begin{center}
-		\includegraphics[width={#1}\mpwidth]{images/linkedinQR.png}
-	\end{center}
+	{\centering
+		\includegraphics[width={#1}\mpwidth]{images/linkedinQR.png}\par
+	}
 }
 
 
@@ -379,7 +388,8 @@
 %---------------------------------------------------------------------------------------
 %	META IMAGE
 %----------------------------------------------------------------------------------------
-\includegraphics[width=\linewidth]{images/headshot.jpg}	%trimming relative to image size
+\includegraphics[width=\linewidth]{images/headshot-resized.jpg}	%trimming relative to image size
+\par\vspace{1.5pt}
 
 %---------------------------------------------------------------------------------------
 %	META SKILLS
@@ -387,7 +397,7 @@
 \cvleftsection{Languages} \\
 \cvother{Java 13+} {5 yrs} 
 \cvother{SQL} {5 yrs} 
-\cvother{Javascript} {9 mo} 
+\cvother{JavaScript} {9 mo} 
 \cvother{Python} {1+ yrs}  
 
 \cvleftsection{TECHNOLOGIES} \\
@@ -396,9 +406,9 @@
 \cvother{Docker/Podman} {2 yrs} 
 
 \cvleftsection {TOOLS} \\
-\cvother{Intellij} {3 yrs} 
-\cvother{VsCode} {2 yrs} 
-\cvother{NeoVim} {3+ yrs} 
+\cvother{IntelliJ} {3 yrs} 
+\cvother{VS Code} {2 yrs} 
+\cvother{Codex} {1+ yrs} 
 \cvother{Atlassian Suite} {5 yrs} 
 
 
@@ -412,7 +422,7 @@
 {08/15/2022 - 05/15/2024}
 {M.S. Computer Science}
 {C.S.U., Long Beach \hfill \textcolor{maincol}{\textbf{GPA: 4.0}}}
-{Computer Science Master’s Program with thesis on AI/ML.  I graduated 2nd in my class and introduced a novel dropout out technique in my thesis, ’Sector-Wise Dropout’.}
+{Computer Science Master’s Program with thesis on AI/ML.  I graduated 2nd in my class and introduced a novel dropout technique in my thesis, ’Sector-Wise Dropout’.}
 
 \cvmetaevent
 {08/15/2015 - 05/15/2020}
@@ -420,7 +430,17 @@
 {C.S.U., Long Beach}
 {}
 
-\vfill\null
+\vspace{-6pt}
+\cvleftsection{SERVICE}
+
+\cvmetaevent
+{07/2012 - 09/2015}
+{Electrical Systems Technician}
+{United States Marine Corps}
+{}
+
+\vfill
+\nopagebreak
 \cvqrcode{0.6}
 
 %---------------------------------------------------------------------------------------
@@ -473,13 +493,14 @@
 %	WORK EXPERIENCE
 %----------------------------------------------------------------------------------------
 %\vfill\null
+\vspace{5pt}
 \cvsection{WORK EXPERIENCE}
 
 \cvevent
 	{06/2024 - Present}
 	{Senior Software Engineer}
     {Raytheon}
-	{Modernize, enhance, and maintain mission critical applications. Incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
+	{Modernize and maintain mission-critical applications, using AI-assisted development and agentic workflows to accelerate feature delivery and improve code readability, testability, and maintainability.}
 	{\cvlist{
 		\item Bringing a heavy emphasis on code quality, my contributions have led to improved maintainability and reduced technical debt across multiple applications.
 	}}
@@ -491,19 +512,20 @@
 	\end{table}
 	}
 	{\cvlist{
-		\item Became the subject matter expert and single largest contributor to a multi-project cross-team Gradel 2 to Gradle 8 migration.
+		\item Became the subject matter expert and single largest contributor to a multi-project cross-team Gradle 2 to Gradle 8 migration.
+		\item Recognized for improving developer productivity by building internal developer tooling, including AI agent skills that codified our complex, custom deployment framework for agentic workflows.
 	}}
 
 \cvevent
 	{07/2024 - 09/2025}
 	{Software Engineer}
   {U.S. Department of Defense}
-	{Fullstack development incorporating new technologies and libraries to deliver new features and/or improve readability, testability, and maintainability.}
+	{Developed full-stack features across Spring Boot, React, and AWS, partnering with end users to turn their feedback into tools that streamlined their daily workflows.}
     {}
 	{
 	\begin{table}[h!]
 		\begin{tabular}{p{2.5cm} p{2cm} p{2cm} p{2cm} p{2cm} }
-			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-react-96.png} React		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-amazon-web-services-120.png} AWS		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-mysql-logo-120.png} MySql		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
+			\includegraphics[width=.5cm, height=.5cm]{icons/icons8-spring-boot-120.png} Spring Boot		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-react-96.png} React		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-amazon-web-services-120.png} AWS		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-mysql-logo-120.png} MySQL		& \includegraphics[width=.5cm, height=.5cm]{icons/icons8-linux-96.png} Linux		\\
     	\end{tabular}
 	\end{table}
 	}
@@ -519,29 +541,12 @@
 	{}
 	{}
 	{\cvlist{
-		\item My Hackathon idea, inspired by customer conversions, lead to implementation, completed by me, which increased yearly revenue by ~\$800,000 (16\%)
+		\item My Hackathon idea, inspired by customer conversations, led to implementation, completed by me, which increased yearly revenue by \textasciitilde\$800,000 (16\%)
 	}}
-
- \cvminievent
-%  \cvevent
- {07/2012  -  09/2015}
- {Electrical Systems Technician}
- {United State Marine Corps}
-%  {}
-%  {}
-%  {}
-%  {}
-
-
 
 % hotfixes to create fake-space to ensure the whole height is used
 % \mbox{}
 % \vfill
-\mbox{}
-\vfill
-\mbox{}
-\vfill
-\mbox{}
 \end{rightcolumn}
 \end{paracol}
 \end{document}
